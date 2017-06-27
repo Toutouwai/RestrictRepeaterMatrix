@@ -10,6 +10,8 @@ For any matrix type in a Repeater Matrix field you have the option to:
 * Prevent trashing of items
 * Limit the number of items that may be added to the inputfield
 
+Please note that restrictions and limits are applied with CSS/JS so should not be considered tamper-proof.
+
 ## Usage
 
 [Install](http://modules.processwire.com/install-uninstall/) the Restrict Repeater Matrix module.
