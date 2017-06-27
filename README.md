@@ -24,7 +24,7 @@ For newly added matrix types, the settings must be saved first in order for the 
 
 ### Setting restrictions via a hook
 
-Besides setting restrictions in the field settings, you can also apply or modify restrictions by hooking `RestrictRepeaterMatrix::checkRestrictions`. This allows for more focused restrictions, for example, applying restrictions depending on the template of the page being edited or depending on the role of the user.
+Besides setting restrictions in the field settings, you can also apply or modify restrictions by [hooking](https://processwire.com/api/hooks/) `RestrictRepeaterMatrix::checkRestrictions`. This allows for more focused restrictions, for example, applying restrictions depending on the template of the page being edited or depending on the role of the user.
 
 The `checkRestrictions()` method receives the following arguments:
 
