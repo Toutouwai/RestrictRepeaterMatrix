@@ -1,0 +1,242 @@
+<?php
+/**
+ *
+ * Restrict Repeater Matrix
+ *
+ * @author Robin Sallis
+ *
+ * ProcessWire 3.x
+ * Copyright (C) 2011 by Ryan Cramer
+ * Licensed under GNU/GPL v2, see LICENSE.TXT
+ *
+ * http://www.processwire.com
+ * http://www.ryancramer.com
+ *
+ */
+
+class RestrictRepeaterMatrix extends WireData implements Module {
+
+	/**
+	 * Module information
+	 */
+	public static function getModuleInfo() {
+		return array(
+			'title' => 'Restrict Repeater Matrix',
+			'version' => 1,
+			'author' => 'Robin Sallis',
+			'href' => 'https://github.com/Toutouwai/RestrictRepeaterMatrix',
+			'summary' => 'Allows restrictions and limits to be placed on Repeater Matrix fields.',
+			'autoload' => "template=admin",
+			'icon' => 'list',
+		);
+	}
+
+	protected $controls = array();
+
+	/**
+	 * Construct
+	 */
+	public function __construct() {
+
+		// Populate controls array
+		$this->controls['nodrag'] = array(
+			'label' => $this->_('No drag'),
+			'identifier' => 'InputfieldRepeaterDrag',
+		);
+		$this->controls['noclone'] = array(
+			'label' => $this->_('No clone'),
+			'identifier' => 'InputfieldRepeaterClone',
+		);
+		$this->controls['notoggle'] = array(
+			'label' => $this->_('No toggle'),
+			'identifier' => 'InputfieldRepeaterToggle',
+		);
+		$this->controls['notrash'] = array(
+			'label' => $this->_('No trash'),
+			'identifier' => 'InputfieldRepeaterTrash',
+		);
+		$this->controls['limit'] = ''; // limit gets special treatment later
+
+	}
+
+	/**
+	 * Ready
+	 */
+	public function ready() {
+		$this->addHookAfter('FieldtypeRepeaterMatrix::getConfigInputfields', $this, 'addConfigInputfields');
+		$this->addHookAfter('ProcessPageEdit::execute', $this, 'addScriptStyles');
+		$this->addHookAfter('InputfieldRepeaterMatrix::render', $this, 'appendToField');
+	}
+
+	/**
+	 * Add config inputfields
+	 *
+	 * @param HookEvent $event
+	 */
+	function addConfigInputfields(HookEvent $event)	{
+		$field = $event->arguments(0);
+		$wrapper = $event->return;
+
+		$matrix_types = $field->type->getMatrixTypes($field);
+
+		foreach($matrix_types as $matrix_type) {
+			// Get 'head' field (the last in matrix type section)
+			$head = $wrapper->getChildByName("matrix{$matrix_type}_head");
+			if(!$head) continue;
+
+			// Create fieldset
+			/* @var InputfieldFieldset $fieldset */
+			$fieldset = $this->modules->get('InputfieldFieldset');
+			$fieldset->name = "restrictions{$matrix_type}";
+			$fieldset->label = $this->_('Restrictions');
+			$collapsed = true;
+
+			// Create checkbox fields
+			foreach($this->controls as $control => $details) {
+				if($control === 'limit') continue; // limit handled separately
+				/* @var InputfieldCheckbox $f */
+				$f = $this->modules->get('InputfieldCheckbox');
+				$f_name = "{$control}_{$matrix_type}";
+				$f->name = $f_name;
+				$f->label = $details['label'];
+				$f->columnWidth = 20;
+				$f->attr('checked', $field->$f_name === 1 ? 'checked' : '');
+				$fieldset->add($f);
+				if($field->$f_name) $collapsed = false;
+			}
+
+			// Create limit field
+			/* @var InputfieldInteger $f */
+			$f = $this->modules->get('InputfieldInteger');
+			$f_name = "limit_{$matrix_type}";
+			$f->name = $f_name;
+			$f->label = $this->_('Limit');
+			$f->columnWidth = 20;
+			$f->inputType = 'number';
+			$f->min = 0;
+			$f->max = 200;
+			$f->value = $field->$f_name;
+			$fieldset->add($f);
+			if($field->$f_name !== null) $collapsed = false;
+
+			// If none of the fields are populated then collapse the fieldset
+			if($collapsed) $fieldset->collapsed = Inputfield::collapsedYes;
+
+			// Add fieldset after 'head'
+			$wrapper->insertAfter($fieldset, $head);
+		}
+	}
+
+	/**
+	 * Append to rendered Repeater Matrix inputfield
+	 *
+	 * @param HookEvent $event
+	 */
+	public function appendToField(HookEvent $event) {
+		$process = $this->process;
+		if(!$process || $process->className() !== 'ProcessPageEdit') return;
+		/* @var ProcessPageEdit $process */
+		$page = $process->getPage();
+
+		$inputfield = $event->object;
+		$field = $inputfield->hasField;
+		if(!$field) return;
+
+		$matrix_types = $field->type->getMatrixTypes($field);
+
+		// Get any restrictions via hookable method
+		$type_restrictions = $this->checkRestrictions($field, $inputfield, $matrix_types, $page);
+		if(!is_array($type_restrictions)) return;
+
+		$out = '';
+		$css = '';
+		$call_checkRepeaterMatrix = '';
+		foreach($type_restrictions as $matrix_type => $restrictions) {
+			// Convert matrix type name to integer if necessary
+			if(is_string($matrix_type)) {
+				if(isset($matrix_types[$matrix_type])) {
+					$matrix_type = $matrix_types[$matrix_type];
+				} else {
+					continue;
+				}
+			}
+			// Prefix for direct children only (in case of nested repeater)
+		    $prefix = ".Inputfield_{$inputfield->name} > div > ul > li[data-type='$matrix_type'] > label";
+			foreach($restrictions as $key => $value) {
+				// Ignore anything that doesn't have an expected key
+				if( !in_array($key, array_keys($this->controls)) ) continue;
+			    if($key === 'limit') {
+			    	// If limit is populated and is an integer (but maybe in string type)
+			    	if( $value !== null && ( is_int($value) || ctype_digit($value) ) ) {
+					    // Call JS function
+			    		$call_checkRepeaterMatrix .= "checkRepeaterMatrix('.Inputfield_{$inputfield->name}', '$matrix_type', '$value');";
+					    // Hide add links by default
+					    $css .= ".Inputfield_{$inputfield->name} > div > .InputfieldRepeaterMatrixAddItem .InputfieldRepeaterMatrixAddLink[data-type='$matrix_type'], ";
+				    }
+			    } else {
+			    	// Add CSS selector if restriction is true
+				    if($value === true) $css .= "$prefix .{$this->controls[$key]['identifier']}, ";
+			    }
+			}
+		}
+		if($css) {
+			$css = rtrim($css, ', ');
+			// Add CSS
+			$out .= "<style>$css { display:none; }</style>";
+		}
+		if($call_checkRepeaterMatrix) {
+			// Add script
+			$out .= <<<EOT
+<script>
+$(function() { 
+	$call_checkRepeaterMatrix
+});
+$(document).ajaxComplete(function() { 
+	$call_checkRepeaterMatrix
+});
+</script>
+EOT;
+		}
+		$event->return .= $out;
+
+	}
+
+	/**
+	 * Check for any restrictions on this Repeater Matrix field (hookable)
+	 *
+	 * @param FieldtypeRepeaterMatrix $field Repeater Matrix field
+	 * @param InputfieldRepeaterMatrix $inputfield Repeater Matrix inputfield
+	 * @param array $matrix_types Array of matrix types for this field, 'name' => 'integer'
+	 * @param Page $page The page open in ProcessPageEdit
+	 * @return array $type_restrictions Multi-dimensional array of matrix type names (or integers) and restrictions for those types
+	 */
+	public function ___checkRestrictions($field, $inputfield, $matrix_types, $page) {
+		$type_restrictions = array();
+		foreach($matrix_types as $matrix_type_name => $matrix_type_integer) {
+			$type_restrictions[$matrix_type_name] = array();
+			// Iterate over the controls added to the field config
+			foreach($this->controls as $control => $details) {
+				$f_name = "{$control}_$matrix_type_integer";
+				$value = $field->$f_name;
+				// For everything apart from the limit, cast to boolean for clarity
+				if($control !== 'limit') $value = (bool) $value;
+				$type_restrictions[$matrix_type_name][$control] = $value;
+			}
+		}
+		return $type_restrictions;
+	}
+
+	/**
+	 * Add script and styles to ProcessPageEdit
+	 *
+	 * @param HookEvent $event
+	 */
+	public function addScriptStyles(HookEvent $event) {
+		$config = $this->config;
+		$info = $this->getModuleInfo();
+		$version = (int) $info['version'];
+		$config->scripts->add($config->urls->$this . "{$this}.js?v=$version");
+		$config->styles->add($config->urls->$this . "{$this}.css?v=$version");
+	}
+
+}
