@@ -28,6 +28,7 @@ class RestrictRepeaterMatrix extends WireData implements Module {
 			'summary' => 'Allows restrictions and limits to be placed on Repeater Matrix fields.',
 			'autoload' => "template=admin",
 			'icon' => 'list',
+			'requires' => 'FieldtypeRepeaterMatrix>=4'
 		);
 	}
 
