@@ -22,7 +22,7 @@ class RestrictRepeaterMatrix extends WireData implements Module {
 	public static function getModuleInfo() {
 		return array(
 			'title' => 'Restrict Repeater Matrix',
-			'version' => 1,
+			'version' => 2,
 			'author' => 'Robin Sallis',
 			'href' => 'https://github.com/Toutouwai/RestrictRepeaterMatrix',
 			'summary' => 'Allows restrictions and limits to be placed on Repeater Matrix fields.',
@@ -172,19 +172,16 @@ class RestrictRepeaterMatrix extends WireData implements Module {
 					    // Call JS function
 			    		$call_checkRepeaterMatrix .= "checkRepeaterMatrix('.Inputfield_{$inputfield->name}', '$matrix_type', '$value');";
 					    // Hide add links by default
-					    $css .= ".Inputfield_{$inputfield->name} > div > .InputfieldRepeaterMatrixAddItem .InputfieldRepeaterMatrixAddLink[data-type='$matrix_type'], ";
+					    $css .= ".Inputfield_{$inputfield->name} > div > .InputfieldRepeaterMatrixAddItem .InputfieldRepeaterMatrixAddLink[data-type='$matrix_type'] { display:none; }\n";
 				    }
 			    } else {
 			    	// Add CSS selector if restriction is true
-				    if($value === true) $css .= "$prefix .{$this->controls[$key]['identifier']}, ";
+				    if($value === true) $css .= "$prefix .{$this->controls[$key]['identifier']} { display:none !important; }\n";
 			    }
 			}
 		}
-		if($css) {
-			$css = rtrim($css, ', ');
-			// Add CSS
-			$out .= "<style>$css { display:none; }</style>";
-		}
+		// Add CSS
+		if($css) $out .= "<style>$css</style>";
 		if($call_checkRepeaterMatrix) {
 			// Add script
 			$out .= <<<EOT
