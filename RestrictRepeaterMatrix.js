@@ -17,7 +17,11 @@ function checkRepeaterMatrix(inputfield_class, matrix_type, limit) {
 	// Hide add-items container if no visible child links
 	var $add_items = $(inputfield_class + ' > div > .InputfieldRepeaterMatrixAddItem');
 	$add_items.show();
-	if(!$add_items.find('a:visible').length) {
+	var $add_links = $add_items.find('a');
+	var $hidden_add_links = $add_links.filter(function() {
+		return $(this).css('display') === 'none';
+	});
+	if($add_links.length === $hidden_add_links.length) {
 		$add_items.hide();
 	}
 

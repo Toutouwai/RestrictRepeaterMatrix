@@ -22,7 +22,7 @@ class RestrictRepeaterMatrix extends WireData implements Module {
 	public static function getModuleInfo() {
 		return array(
 			'title' => 'Restrict Repeater Matrix',
-			'version' => 2,
+			'version' => 3,
 			'author' => 'Robin Sallis',
 			'href' => 'https://github.com/Toutouwai/RestrictRepeaterMatrix',
 			'summary' => 'Allows restrictions and limits to be placed on Repeater Matrix fields.',
