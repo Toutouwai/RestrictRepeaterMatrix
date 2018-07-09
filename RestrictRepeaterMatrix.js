@@ -1,5 +1,5 @@
 function checkRepeaterMatrix(inputfield_class, matrix_type, limit) {
-	
+
 	// All arguments are required
 	if( !(inputfield_class && matrix_type && limit) ) return;
 
