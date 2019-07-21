@@ -1,14 +1,15 @@
 # Restrict Repeater Matrix
 
-A module for ProcessWire CMS/CMF. Allows restrictions and limits to be placed on Repeater Matrix fields. Requires FieldtypeRepeaterMatrix >= v0.0.4
+A module for ProcessWire CMS/CMF. Allows restrictions and limits to be placed on Repeater Matrix fields. Requires ProcessWire >= v3.0.0 and FieldtypeRepeaterMatrix >= v0.0.5.
 
 For any matrix type in a Repeater Matrix field you have the option to:
 
+* Disable settings for items (cannot change matrix type)
 * Prevent drag-sorting of items
 * Prevent cloning of items
 * Prevent toggling of the published state of items
 * Prevent trashing of items
-* Limit the number of items that may be added to the inputfield
+* Limit the number of items that may be added to the inputfield. When the limit is reached the "Add new" button for the matrix type will be removed and the matrix type will not be available for selection in the "Type" dropdown of other matrix items.
 
 Please note that restrictions and limits are applied with CSS/JS so should not be considered tamper-proof.
 
@@ -18,7 +19,7 @@ Please note that restrictions and limits are applied with CSS/JS so should not b
 
 For each matrix type created in the Repeater Matrix field settings, a "Restrictions" fieldset is added at the bottom of the matrix type settings:
 
-![2017-06-26_213521](https://user-images.githubusercontent.com/1538852/27533375-70133e02-5ab7-11e7-8af1-1fabd91b9f7f.png)
+![Settings](https://user-images.githubusercontent.com/1538852/61585752-baa12a80-abb7-11e9-84ab-83cd154f0fb7.png)
 
 For newly added matrix types, the settings must be saved first in order for the Restrictions fieldset to appear. Set restrictions for each matrix type as needed. A limit of zero means that no items of that matrix type may be added to the inputfield.
 
@@ -35,7 +36,7 @@ The `checkRestrictions()` method receives the following arguments:
 
 The method returns a multi-dimensional array of matrix types and restrictions for each of those types. An example of a returned array:
 
-![2017-06-26_220809](https://user-images.githubusercontent.com/1538852/27534705-0c306d9c-5abc-11e7-9689-6099ac253b4b.png)
+![Array](https://user-images.githubusercontent.com/1538852/61585744-7f9ef700-abb7-11e9-8026-7000d0f5a049.png)
 
 #### Example hooks
 
@@ -67,8 +68,3 @@ $wire->addHookAfter('RestrictRepeaterMatrix::checkRestrictions', function(HookEv
     $event->return = $type_restrictions;
 });
 ```
-
-
-## License
-
-Released under Mozilla Public License v2. See file LICENSE for details.

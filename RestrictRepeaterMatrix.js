@@ -5,12 +5,19 @@ function checkRepeaterMatrix(inputfield_class, matrix_type, limit) {
 
 	// Get repeater items of this matrix type
 	var $repeater_items = $(inputfield_class + ' .InputfieldRepeaterItem[data-type="' + matrix_type + '"]').not('.InputfieldRepeaterNewItem');
+	
+	// Get repeater items not of this matrix type
+	var $other_repeater_items = $(inputfield_class + ' .InputfieldRepeaterItem[data-type!="' + matrix_type + '"]').not('.InputfieldRepeaterNewItem');
 
-	// Check if add-links should be hidden or shown
+	// Check if limit has been reached
 	var $add_link = $(inputfield_class + ' > div > .InputfieldRepeaterMatrixAddItem .InputfieldRepeaterMatrixAddLink[data-type="' + matrix_type + '"]');
 	if(limit === 0 || $repeater_items.length > limit - 1) {
+		// Remove type from settings select
+		$other_repeater_items.find('select[id^=Inputfield_type_repeater] option[value=' + matrix_type + ']').remove();
+		// Hide add link
 		$add_link.removeClass('rrm-show');
 	} else {
+		// Show add link
 		$add_link.addClass('rrm-show');
 	}
 

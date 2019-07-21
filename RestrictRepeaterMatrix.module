@@ -1,4 +1,5 @@
-<?php
+<?php namespace ProcessWire;
+
 /**
  *
  * Restrict Repeater Matrix
@@ -22,13 +23,13 @@ class RestrictRepeaterMatrix extends WireData implements Module {
 	public static function getModuleInfo() {
 		return array(
 			'title' => 'Restrict Repeater Matrix',
-			'version' => 3,
+			'version' => '0.1.4',
 			'author' => 'Robin Sallis',
 			'href' => 'https://github.com/Toutouwai/RestrictRepeaterMatrix',
 			'summary' => 'Allows restrictions and limits to be placed on Repeater Matrix fields.',
 			'autoload' => "template=admin",
 			'icon' => 'list',
-			'requires' => 'FieldtypeRepeaterMatrix>=4'
+			'requires' => 'ProcessWire>=3.0.0, FieldtypeRepeaterMatrix>=5'
 		);
 	}
 
@@ -40,6 +41,10 @@ class RestrictRepeaterMatrix extends WireData implements Module {
 	public function __construct() {
 
 		// Populate controls array
+		$this->controls['nosettings'] = array(
+			'label' => $this->_('No settings'),
+			'identifier' => 'InputfieldRepeaterSettingsToggle',
+		);
 		$this->controls['nodrag'] = array(
 			'label' => $this->_('No drag'),
 			'identifier' => 'InputfieldRepeaterDrag',
@@ -100,7 +105,7 @@ class RestrictRepeaterMatrix extends WireData implements Module {
 				$f_name = "{$control}_{$matrix_type}";
 				$f->name = $f_name;
 				$f->label = $details['label'];
-				$f->columnWidth = 20;
+				$f->columnWidth = 16;
 				$f->attr('checked', $field->$f_name === 1 ? 'checked' : '');
 				$fieldset->add($f);
 				if($field->$f_name) $collapsed = false;
