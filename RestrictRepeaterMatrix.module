@@ -105,7 +105,7 @@ class RestrictRepeaterMatrix extends WireData implements Module {
 				$f_name = "{$control}_{$matrix_type}";
 				$f->name = $f_name;
 				$f->label = $details['label'];
-				$f->columnWidth = 16;
+				$f->columnWidth = 16.6666;
 				$f->attr('checked', $field->$f_name === 1 ? 'checked' : '');
 				$fieldset->add($f);
 				if($field->$f_name) $collapsed = false;
@@ -117,7 +117,7 @@ class RestrictRepeaterMatrix extends WireData implements Module {
 			$f_name = "limit_{$matrix_type}";
 			$f->name = $f_name;
 			$f->label = $this->_('Limit');
-			$f->columnWidth = 20;
+			$f->columnWidth = 16.6666;
 			$f->inputType = 'number';
 			$f->min = 0;
 			$f->max = 200;

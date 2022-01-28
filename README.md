@@ -1,6 +1,8 @@
 # Restrict Repeater Matrix
 
-A module for ProcessWire CMS/CMF. Allows restrictions and limits to be placed on Repeater Matrix fields. Requires ProcessWire >= v3.0.0 and FieldtypeRepeaterMatrix >= v0.0.5.
+**Note: not compatible with Repeater Matrix >= v7. If the features of this module are important to you then please submit requests to Ryan that the features be built into Repeater Matrix.**
+
+Allows restrictions and limits to be placed on Repeater Matrix fields. Requires ProcessWire >= v3.0.0 and FieldtypeRepeaterMatrix >= v0.0.5.
 
 For any matrix type in a Repeater Matrix field you have the option to:
 
