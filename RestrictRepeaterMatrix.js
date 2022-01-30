@@ -1,8 +1,5 @@
 function checkRepeaterMatrix(inputfield_class, matrix_type, limit, limit_clone) {
 
-	// All arguments are required
-	if(!(inputfield_class && matrix_type && limit)) return;
-
 	// Inputfield
 	var $inputfield = $(inputfield_class);
 	

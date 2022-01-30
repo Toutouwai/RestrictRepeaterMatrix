@@ -145,7 +145,7 @@ class RestrictRepeaterMatrix extends WireData implements Module {
 		if(is_null($add_type)) $add_type = 1;
 		$inputfield->wrapAttr('data-add-type', $add_type);
 
-		$config = $this->config;
+		$config = $this->wire()->config;
 		$info = $this->getModuleInfo();
 		$version = $info['version'];
 		$config->scripts->add($config->urls->$this . "$this.js?v=$version");
@@ -233,7 +233,7 @@ EOT;
 	 * @param InputfieldRepeaterMatrix $inputfield Repeater Matrix inputfield
 	 * @param array $matrix_types Array of matrix types for this field, 'name' => 'integer'
 	 * @param Page $page The page open in ProcessPageEdit
-	 * @return array $type_restrictions Multi-dimensional array of matrix type names (or integers) and restrictions for those types
+	 * @return array Multi-dimensional array of matrix type names (or integers) and restrictions for those types
 	 */
 	public function ___checkRestrictions($field, $inputfield, $matrix_types, $page) {
 		$type_restrictions = [];
