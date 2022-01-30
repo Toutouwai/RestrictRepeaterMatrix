@@ -1,6 +1,10 @@
-.InputfieldRepeaterMatrix .rrm-show { display:block !important; }
-
-/* Fix for nbsp dividers */
-.InputfieldRepeaterMatrixAddItem { overflow:hidden; }
-.InputfieldRepeaterMatrixAddItem span { float:left; margin-right:0.5em; }
-.InputfieldRepeaterMatrixAddLink { float:left; margin-right:1em; }
+.InputfieldRepeaterMatrix .rrm-show {
+  display: block !important; }
+.InputfieldRepeaterMatrix[data-add-type="1"] > .InputfieldContent > .InputfieldRepeaterMatrixAddItem {
+  overflow: hidden; }
+  .InputfieldRepeaterMatrix[data-add-type="1"] > .InputfieldContent > .InputfieldRepeaterMatrixAddItem span {
+    float: left;
+    margin-right: 0.5em; }
+  .InputfieldRepeaterMatrix[data-add-type="1"] > .InputfieldContent > .InputfieldRepeaterMatrixAddItem .InputfieldRepeaterMatrixAddLink {
+    float: left;
+    margin-right: 1em; }

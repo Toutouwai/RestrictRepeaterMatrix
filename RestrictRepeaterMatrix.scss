@@ -1,0 +1,10 @@
+.InputfieldRepeaterMatrix {
+	.rrm-show { display:block !important; }
+	&[data-add-type="1"] {
+		// Fix for nbsp dividers
+		> .InputfieldContent > .InputfieldRepeaterMatrixAddItem { overflow:hidden;
+			span { float:left; margin-right:0.5em; }
+			.InputfieldRepeaterMatrixAddLink { float:left; margin-right:1em; }
+		}
+	}
+}

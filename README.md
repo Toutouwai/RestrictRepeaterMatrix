@@ -1,7 +1,5 @@
 # Restrict Repeater Matrix
 
-**Note: not compatible with Repeater Matrix >= v7. If the features of this module are important to you then please submit requests to Ryan that the features be built into Repeater Matrix.**
-
 Allows restrictions and limits to be placed on Repeater Matrix fields. Requires ProcessWire >= v3.0.0 and FieldtypeRepeaterMatrix >= v0.0.5.
 
 For any matrix type in a Repeater Matrix field you have the option to:
@@ -12,6 +10,7 @@ For any matrix type in a Repeater Matrix field you have the option to:
 * Prevent toggling of the published state of items
 * Prevent trashing of items
 * Limit the number of items that may be added to the inputfield. When the limit is reached the "Add new" button for the matrix type will be removed and the matrix type will not be available for selection in the "Type" dropdown of other matrix items.
+* Hide the clone button when the limit for a matrix type has been reached. Note that in PW >= 3.0.187 this also means that the copy/paste feature will become unavailable for the matrix type.
 
 Please note that restrictions and limits are applied with CSS/JS so should not be considered tamper-proof.
 
@@ -38,7 +37,7 @@ The `checkRestrictions()` method receives the following arguments:
 
 The method returns a multi-dimensional array of matrix types and restrictions for each of those types. An example of a returned array:
 
-![Array](https://user-images.githubusercontent.com/1538852/61585744-7f9ef700-abb7-11e9-8026-7000d0f5a049.png)
+![type-restrictions](https://user-images.githubusercontent.com/1538852/151681994-72bd6959-9548-4af8-ada9-4fc31f3567c0.png)
 
 #### Example hooks
 
