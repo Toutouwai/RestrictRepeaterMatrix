@@ -20,7 +20,7 @@ Please note that restrictions and limits are applied with CSS/JS so should not b
 
 For each matrix type created in the Repeater Matrix field settings, a "Restrictions" fieldset is added at the bottom of the matrix type settings:
 
-![Settings](https://user-images.githubusercontent.com/1538852/61585752-baa12a80-abb7-11e9-84ab-83cd154f0fb7.png)
+![Settings](https://user-images.githubusercontent.com/1538852/151682166-002350aa-0338-4951-a96b-bd82838a9085.png)
 
 For newly added matrix types, the settings must be saved first in order for the Restrictions fieldset to appear. Set restrictions for each matrix type as needed. A limit of zero means that no items of that matrix type may be added to the inputfield.
 
